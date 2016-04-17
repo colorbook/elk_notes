@@ -59,7 +59,7 @@
 
 ### ELK 匯入資料
 1. 執行 LS 設定檔
-	撰寫設定檔內容並執行，相關內容請參考[投影片](../slides/ELK_share_public.html)，執行指令先透過 type 指令將檔案內容輸出(類似 Linux cat 指令)，並透過 pipe 將資料移轉至 LS 處理，因此 LS 設定檔 input 內容為 stdin{}，完整指令請參考下圖。
+	撰寫設定檔內容並執行，相關內容請參考[投影片](http://colorbook.github.io/elk_notes/slides/ELK_share_public.html)，執行指令先透過 type 指令將檔案內容輸出(類似 Linux cat 指令)，並透過 pipe 將資料移轉至 LS 處理，因此 LS 設定檔 input 內容為 stdin{}，完整指令請參考下圖。
 	![10_Logstash_inputdata.png](../pictures/10_Logstash_inputdata.PNG)
     
     設定檔 output 部分設定資料匯入 ES 中，並顯示螢幕上。
