@@ -54,3 +54,28 @@ filter{
 }
 ```
 上述程式碼於filter階段先利用csv plugin處理各欄位資料，並判斷src_ip欄位值為src_ip時，則忽略處理該event。
+
+## Tip3
+##### 需求
+指定特定欄位為空值(null)，例如：
+```bash
+原始資料欄位：src_ip,src_port,dst_ip,dst_port,protocol
+資料內容：1.1.1.1,1122,2.2.2.2,80,TCP
+```
+預將src_port指定為空值，但指定為null輸入至ES後，ES會辨認為字串，實際上並非空值。
+##### 參考資料
+[Check existence of a field and checking null value in field](https://discuss.elastic.co/t/check-existence-of-a-field-and-checking-null-value-in-field/24968/3)
+##### 解決方法
+使用ruby plugin指定event欄位資料指定為空值(nil)
+```bash
+[root@ELK]# null_ruby.conf
+...
+filter{
+	ruby{
+    	code => "
+        	event['src_port'] = nil
+            event['protocol'] = nil
+        "
+    }
+}
+```
