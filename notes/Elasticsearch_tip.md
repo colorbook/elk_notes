@@ -78,3 +78,20 @@ PUT /_template/demo_1
 3. src_port欄位資料形式設定為interger類型
 4. url欄位資料形式設定為string類型，ES預設會將各string做斷詞斷句並做index，因此以url欄位值可能會被斷詞成許多字串做index，爾後會造成分析上的困擾(例如：於Kibana上分析會出現來自於同url的不同字串，原本資料為demo-data，晶斷詞後會分為demo與data，因此Kibana要統計url時會分別計算demo與data出現的次數，造成統計無意義。)因此在此利用index參數設定not_analyzed，讓ES不要針對該欄位值做index處理，所以index會保留原始字串。
 5. origin_datetime欄位資料形式設定為date類型
+
+## Tip3
+##### 需求
+ES 利用QueryDSL查詢資料時，預一次下載10K筆以上資料時產生**Result window is too large**錯誤訊息。
+```
+ActionView::Template::Error ([500] {"error":{"root_cause":[{"type":"query_phase_execution_exception","reason":"Result window is too large, from + size must be less than or equal to: [10000] but was [11880].
+...
+```
+##### 參考資料
+[SearchAPI-From/Size](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html)
+##### 解決方法
+ES預設index.max_result_windows=10000，每頁response hit數量為10K筆查詢資料，因此設定會增加記憶體使用率，因此修改此參數必須考量記憶體大小是否足夠。
+##### 操作
+修改參數，透過curl指令工具呼叫ES setting API，針對index_1做max_result_window參數修改。
+```bash
+[es@ELK_Demo]$curl -XGET 'http://yourelasticsearch:9200/index_1/_settings' -d '{ "index" : { "max_result_window" : 20000 } }'
+```
