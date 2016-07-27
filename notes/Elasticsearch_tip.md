@@ -95,3 +95,60 @@ ES預設index.max_result_windows=10000，每頁response hit數量為10K筆查詢
 ```bash
 [es@ELK_Demo]$curl -XGET 'http://yourelasticsearch:9200/index_1/_settings' -d '{ "index" : { "max_result_window" : 20000 } }'
 ```
+## Tip4
+##### 需求
+查詢條件OR運算，回傳資料必須滿足有必要欄位type值為A，且需由欄位tag值為B或C,需求欄位class為D，需求欄位必須三條件符合其中兩項，因此套用SQL與法可表示為：
+```
+SELECT * FROM dataset WHERE type='A' AND (tag='B' OR tag='C' OR class='D');
+```
+下表列舉符合與不符合的資料
+
+||type|tag|class|
+|:-:|:-:|:-:|:-:|
+|符合|A|B|D|
+|符合|A|C|D|
+|不符合|A|B|E|
+##### 參考資料
+[QueryDSL－Bool Query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html)
+##### 解決方法
+使用QueryDSL定義的must參數做為條件式AND運算子，且should參數做為條件式OR運算子，並使用minimum_should_match參數設定OR運算必須符合至少兩項條件。
+##### 操作
+```bash
+[es@ELK_Demo]$curl -XGET 'http://yourelasticsearch:9200/index_*/_settings' -d '
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "type": "A"
+          }
+        }
+      ],
+      "must_not": [],
+      "should": [
+        {
+          "term": {
+            "tag": "B"
+          }
+        },
+        {
+          "term": {
+            "tag": "C"
+          }
+        },
+        {
+          "term": {
+            "class": "D"
+          }
+        }
+      ],
+      "minimum_should_match": 2
+    }
+  },
+  "from": 0,
+  "size": 20000,
+  "sort": [],
+  "aggs": {}
+}
+```
