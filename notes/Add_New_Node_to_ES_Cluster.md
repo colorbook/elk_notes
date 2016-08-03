@@ -157,7 +157,7 @@ ES_MAX_MEM=8g
 ```
 
 同步完成結果如下，可發現原本 node05 的 index 資料已分布於各個 node 中。
-![Add_New_Node_to_Elasticsearch_Cluster_1_Cluster_Reenabled](../pictures/Add_New_Node_to_Elasticsearch_Cluster_1_Cluster_Reenabled.png)
+![Add_New_Node_to_Elasticsearch_Cluster_1_Cluster_Reenabled](../pictures/Add_New_Node_to_Elasticsearch_Cluster_2_Cluster_Reenabled.png)
 
 ### 問題與討論
 1. 因原叢集有安裝 [Graph](https://www.elastic.co/products/graph)，其叢集各 ES node 已安裝 license plugin 與 graph plugin，詳情請見 [Graph安裝步驟](https://www.elastic.co/downloads/graph)。而 node05 未安裝相關套件，因此會造成啟動錯誤，錯誤訊息如下：
