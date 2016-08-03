@@ -162,6 +162,7 @@ ES_MAX_MEM=8g
 ### 問題與討論
 1. 因原叢集有安裝 [Graph](https://www.elastic.co/products/graph)，其叢集各 ES node 已安裝 license plugin 與 graph plugin，詳情請見 [Graph安裝步驟](https://www.elastic.co/downloads/graph)。而 node05 未安裝相關套件，因此會造成啟動錯誤，錯誤訊息如下：
 
+
 ```bash
 [es@ELK_Demo]$ ./elasticsearch-2.3.4/bin/elasticsearch
 ...
@@ -171,3 +172,12 @@ ES_MAX_MEM=8g
 ```
 
 後續安裝 ES license plugin 與 graph plugin 已順利解決問題
+
+2. 複製 ./data 過程，其資料夾下是以叢集名稱做分類，而原 node05 叢集名稱與預加入的叢集名稱不同，因此資料只會呈現預加入的叢集名稱資料。
+
+```bash
+[es@ELK_Demo]$ ls ./elasticsearch-2.3.4/data
+my-cluster	node05-orig-cluster
+```
+
+上述兩資料夾 my-cluster 為預加入叢集的名稱，而 node05-orig-cluster 為原本叢集名稱，而新 node05 設定的叢集名稱為 my-cluster ，因此不會讀取 node05-orig-cluster 資料夾內的資料，故無法呈現原本 node05 資料，因此需將 node05-orig-cluster 底下資料搬移至 my-cluster 則解決問題。
