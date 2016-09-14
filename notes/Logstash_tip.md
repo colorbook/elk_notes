@@ -79,3 +79,26 @@ filter{
     }
 }
 ```
+
+## Tip4 切割欄位
+##### 需求
+資料時間戳記格式為19位，例如：1472658944464592423，，而ES date格是最多只支援13位數的[epoch_millis](https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-date-format.html)格式，因此希望擷取前13位。
+
+##### 參考資料
+[Filter plugins－grok](https://www.elastic.co/guide/en/logstash/current/plugins-filters-grok.html)
+##### 解決方法
+使用ruby plugin自定義過濾的正規表達式，只擷取前13位數值，並覆蓋原有欄位內容。
+自定義Patterns語法為：
+```bash
+(?<field_name>the pattern here)
+```
+```bash
+[root@ELK]# null_ruby.conf
+...
+filter{
+	grok{
+    	match => { "Orig_Time" => "(?<Orig_Time>[0-9]{13})%{GREEDYDATA}"}
+        overwrite => ["Orig_Time"]
+    }
+}
+```
